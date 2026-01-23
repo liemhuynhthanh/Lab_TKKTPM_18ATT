@@ -6,7 +6,7 @@ COPY package.json .
 
 RUN npm install
 
-COPY producer.js .
+COPY producer_dlq.js .
 
 EXPOSE 3000
 
