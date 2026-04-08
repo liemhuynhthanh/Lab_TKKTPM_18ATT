@@ -1,0 +1,39 @@
+services:
+  vote:
+    image: dockersamples/examplevotingapp_vote
+    container_name: vote_container
+    ports:
+      - "5000:80"
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:latest
+    container_name: redis_vote_container
+
+  worker:
+    image: dockersamples/examplevotingapp_worker
+    container_name: worker_container
+    depends_on:
+      - redis
+      - db
+
+  db:
+    image: postgres:15
+    container_name: postgres_vote_container
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  result:
+    image: dockersamples/examplevotingapp_result
+    container_name: result_container
+    ports:
+      - "5001:80"
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:

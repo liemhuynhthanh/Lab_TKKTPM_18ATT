@@ -1,0 +1,20 @@
+services:
+  django:
+    build: .
+    container_name: django_container
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+
+  celery:
+    build: .
+    container_name: celery_container
+    command: celery -A project worker --loglevel=info
+    depends_on:
+      - redis
+
+  redis:
+    image: redis
+    container_name: redis_container

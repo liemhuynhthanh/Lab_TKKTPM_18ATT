@@ -1,0 +1,17 @@
+services:
+  app1:
+    image: nginx
+    container_name: app1_container
+    networks:
+      - private_net
+
+  app2:
+    image: busybox
+    container_name: app2_container
+    command: sleep 3600
+    networks:
+      - private_net
+
+networks:
+  private_net:
+    driver: bridge

@@ -1,0 +1,39 @@
+services:
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb_container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: nextclouddb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+  redis:
+    image: redis:latest
+    container_name: redis_container
+    restart: always
+
+  nextcloud:
+    image: nextcloud:latest
+    container_name: nextcloud_container
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - mariadb
+      - redis
+    environment:
+      MYSQL_DATABASE: nextclouddb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_HOST: mariadb
+      REDIS_HOST: redis
+    volumes:
+      - nextcloud_data:/var/www/html
+
+volumes:
+  mariadb_data:
+  nextcloud_data:

@@ -1,0 +1,6 @@
+services:
+  react-app:
+    build: .
+    container_name: react_nginx_container
+    ports:
+      - "3000:80"

@@ -1,0 +1,6 @@
+services:
+  flaskapp:
+    build: .
+    container_name: flask_app_container
+    ports:
+      - "5000:5000"

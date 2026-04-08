@@ -1,0 +1,12 @@
+{
+  "name": "node-mysql-app",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "^4.22.1",
+    "mysql2": "^3.20.0"
+  }
+}
