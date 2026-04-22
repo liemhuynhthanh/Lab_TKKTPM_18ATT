@@ -8,5 +8,9 @@ module.exports = {
         user: process.env.DB_USER || 'root',
         password: process.env.DB_PASSWORD || '',
         database: process.env.DB_NAME || 'movie_ticket_db'
+    },
+    KAFKA: {
+        brokers: [process.env.KAFKA_BROKER || 'localhost:9092'],
+        clientId: process.env.KAFKA_CLIENT_ID || 'movie-service'
     }
 };
