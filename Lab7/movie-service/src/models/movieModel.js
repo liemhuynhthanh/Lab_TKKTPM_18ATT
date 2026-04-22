@@ -1,58 +1,72 @@
-const fs = require('fs');
-const path = require('path');
+const mysql = require('mysql2/promise');
 const config = require('../config/config');
 
+/**
+ * Định nghĩa thực thể Movie (Entity)
+ */
+class Movie {
+    constructor({ id, title, genre, duration, price, created_at }) {
+        this.id = id;
+        this.title = title;
+        this.genre = genre;
+        this.duration = duration;
+        this.price = price ? parseFloat(price) : 0;
+        this.createdAt = created_at;
+    }
+}
+
+/**
+ * Lớp xử lý Database (Model/Repository)
+ */
 class MovieModel {
     constructor() {
+        this.pool = mysql.createPool({
+            ...config.DB,
+            waitForConnections: true,
+            connectionLimit: 10,
+            queueLimit: 0
+        });
         this.init();
     }
 
-    init() {
-        // Tạo thư mục data nếu chưa tồn tại
-        const dataDir = path.dirname(config.DATA_FILE);
-        if (!fs.existsSync(dataDir)) {
-            fs.mkdirSync(dataDir, { recursive: true });
+    async init() {
+        try {
+            const connection = await this.pool.getConnection();
+            const sql = `
+                CREATE TABLE IF NOT EXISTS movies (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    title VARCHAR(255) NOT NULL,
+                    genre VARCHAR(100),
+                    duration VARCHAR(50),
+                    price DECIMAL(10, 2),
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+            `;
+            await connection.query(sql);
+            connection.release();
+            console.log('[Model] Table check complete.');
+        } catch (error) {
+            console.error('[Model] Init Error:', error.message);
         }
-
-        if (!fs.existsSync(config.DATA_FILE)) {
-            const initialMovies = [
-                { id: 1, title: 'Avengers: Endgame', genre: 'Action', duration: '181 min', price: 100000 },
-                { id: 2, title: 'Interstellar', genre: 'Sci-Fi', duration: '169 min', price: 90000 },
-                { id: 3, title: 'The Conjuring', genre: 'Horror', duration: '112 min', price: 80000 }
-            ];
-            this.save(initialMovies);
-        }
     }
 
-
-    getAll() {
-        const data = fs.readFileSync(config.DATA_FILE);
-        return JSON.parse(data);
+    async findAll() {
+        const [rows] = await this.pool.query('SELECT * FROM movies ORDER BY id DESC');
+        return rows.map(row => new Movie(row));
     }
 
-    save(movies) {
-        fs.writeFileSync(config.DATA_FILE, JSON.stringify(movies, null, 2));
+    async findById(id) {
+        const [rows] = await this.pool.query('SELECT * FROM movies WHERE id = ?', [id]);
+        return rows.length ? new Movie(rows[0]) : null;
     }
 
-    add(movieData) {
-        const movies = this.getAll();
-        const newMovie = {
-            id: movies.length > 0 ? movies[movies.length - 1].id + 1 : 1,
-            ...movieData
-        };
-        movies.push(newMovie);
-        this.save(movies);
-        return newMovie;
-    }
-
-    update(id, movieData) {
-        let movies = this.getAll();
-        const index = movies.findIndex(m => m.id === id);
-        if (index === -1) return null;
-
-        movies[index] = { ...movies[index], ...movieData, id };
-        this.save(movies);
-        return movies[index];
+    async save(data) {
+        const { title, genre, duration, price } = data;
+        const [result] = await this.pool.query(
+            'INSERT INTO movies (title, genre, duration, price) VALUES (?, ?, ?, ?)',
+            [title, genre, duration, price]
+        );
+        return await this.findById(result.insertId);
     }
 }
 
