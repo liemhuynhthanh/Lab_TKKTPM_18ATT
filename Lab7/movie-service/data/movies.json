@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "title": "Avengers: Endgame",
+    "genre": "Action",
+    "duration": "181 min",
+    "price": 100000
+  },
+  {
+    "id": 2,
+    "title": "Interstellar",
+    "genre": "Sci-Fi",
+    "duration": "169 min",
+    "price": 90000
+  },
+  {
+    "id": 3,
+    "title": "The Conjuring",
+    "genre": "Horror",
+    "duration": "112 min",
+    "price": 80000
+  },
+  {
+    "id": 4,
+    "title": "Avengers: Endgame",
+    "genre": "Action",
+    "duration": "181 min",
+    "price": 100000
+  },
+  {
+    "id": 5,
+    "title": "Avengers: Endgame",
+    "genre": "Action",
+    "duration": "181 min",
+    "price": 100000
+  },
+  {
+    "id": 6,
+    "title": "Avengers: Endgame",
+    "genre": "Action",
+    "duration": "181 min",
+    "price": 100000
+  }
+]
