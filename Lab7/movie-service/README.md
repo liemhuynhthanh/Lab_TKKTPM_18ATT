@@ -1,5 +1,6 @@
 Thực hiện vai trò người thứ 3 :Movie Service 
-
-Nhóm : Bảo, Sơn , Quyền, Quý, Liêm
-# Movie Service (Node.js + Express)
-
+Trần Quốc Bảo
+Huỳnh Thanh Liêm
+Nguyễn Trung Quyền
+Huỳnh Thanh Quý
+Lưu Ngọc Cao Sơn
