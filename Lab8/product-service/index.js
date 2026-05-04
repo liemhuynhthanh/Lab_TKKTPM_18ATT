@@ -54,7 +54,7 @@ app.get('/products/:id', async (req, res) => {
     }
 });
 
-app.listen(PORT, async () => {
+app.listen(PORT,'0.0.0.0', async () => {
     console.log(`[PU1 - Product Service] running on port ${PORT}`);
     // Ensuring Redis is connected
     try {
